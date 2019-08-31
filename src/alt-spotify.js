@@ -1,7 +1,6 @@
 'use strict'
 const fastify = require('fastify')
 const fetch = require('node-fetch')
-const FormData = require('form-data')
 
 async function makeApp({clientId, clientSecret, externalBaseUrl}) {
   const app = fastify()
@@ -34,10 +33,8 @@ async function makeApp({clientId, clientSecret, externalBaseUrl}) {
       return response.redirect(redirectUrl.href)
     }
 
-    console.log(`@@@GIL fetching token with code ${code}...`)
     const {access_token, refresh_token, expires_in} = await fetchToken(code, redirect)
 
-    console.log('@@@GIL getting userid...')
     const userId = await getUserId(access_token)
 
     accessTokenToRefreshToken[access_token] = refresh_token
@@ -47,7 +44,7 @@ async function makeApp({clientId, clientSecret, externalBaseUrl}) {
     redirectUrl.searchParams.set('expiresIn', expires_in)
     redirectUrl.searchParams.set('userId', userId)
 
-    return response.redirect(redirect)
+    return response.redirect(redirectUrl.href)
   })
 
   app.post('/refresh', async request => {
@@ -64,7 +61,7 @@ async function makeApp({clientId, clientSecret, externalBaseUrl}) {
   return app
 
   async function refreshToken(accessToken) {
-    const formData = new FormData()
+    const formData = new URLSearchParams()
     formData.append('grant_type', 'refresh_token')
     formData.append('refresh_token', accessTokenToRefreshToken[accessToken])
 
@@ -86,7 +83,7 @@ async function makeApp({clientId, clientSecret, externalBaseUrl}) {
   }
 
   async function fetchToken(code, redirect) {
-    const formData = new FormData()
+    const formData = new URLSearchParams()
     formData.append('grant_type', 'authorization_code')
     formData.append('code', code)
     formData.append(
@@ -110,7 +107,7 @@ async function makeApp({clientId, clientSecret, externalBaseUrl}) {
   async function getUserId(accessToken) {
     const response = await fetch(`https://api.spotify.com/v1/me`, {
       headers: {
-        Authorization: `Bearer ${Buffer.from(accessToken).toString('base64')}}`
+        Authorization: `Bearer ${accessToken}`
       }
     })
     await throwIfBadResponse(response)
