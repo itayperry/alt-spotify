@@ -9,8 +9,39 @@
   <body>
     <h1>Alt Spotify</h1>
     <a
-      href="http://localhost:3000/authorize?scope=user-read-private+user-read-email&redirect=http://localhost:5000/"
+      href="http://localhost:3000/authorize?scope=user-read-private+user-library-read&user-read-email&redirect=http://localhost:5000/"
       >Login</a
     >
+    <h1>Albums</h1>
+    <div id="albums"></div>
+
+    <script async type="module">
+      async function main() {
+        const params = new URLSearchParams(window.location.search.substring(1))
+        const accessToken = params.get('accessToken')
+        if (!params.get('accessToken')) {
+          return
+        }
+
+        const albumsResponse = await fetch('https://api.spotify.com/v1/me/albums', {
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          }
+        })
+
+        if (!albumsResponse.ok)
+          throw new Error(`Spotify error: ${albumsResponse.status}: ${await albumsResponse.text()}`)
+
+        const albums = await albumsResponse.json()
+
+        document.querySelector('#albums').innerHTML = `
+        <ul>
+          ${albums.items.map(({album}) => `<li>${album.name}</li>`).join('')}
+        </ul>
+      `
+      }
+
+      main().catch(err => document.querySelector('#albums').innerHTML = `error: ${err}`)
+    </script>
   </body>
 </html>
