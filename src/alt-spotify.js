@@ -55,7 +55,7 @@ async function makeApp({clientId, clientSecret, externalBaseUrl}) {
     delete accessTokenToRefreshToken[accessToken]
     accessTokenToRefreshToken[access_token] = refresh_token
 
-    return {access_token, refresh_token, expires_in}
+    return {accessToken: access_token, expiresIn: expires_in}
   })
 
   return app
