@@ -1,0 +1,23 @@
+{
+  "name": "alt-spotify",
+  "version": "1.0.0",
+  "description": "POC for an alternative client to spotify",
+  "main": "index.js",
+  "scripts": {
+    "start": "serve public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/giltayar/alt-spotify.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/giltayar/alt-spotify/issues"
+  },
+  "homepage": "https://github.com/giltayar/alt-spotify#readme",
+  "devDependencies": {
+    "serve": "^11.1.0"
+  }
+}
