@@ -2,22 +2,33 @@
   "name": "alt-spotify",
   "version": "1.0.0",
   "description": "POC for an alternative client to spotify",
-  "main": "index.js",
+  "main": "src/alt-spotify.js",
   "scripts": {
-    "start": "serve public"
+    "test": "prettier && eslint",
+    "start": "run-p start:*",
+    "start:frontend": "serve public",
+    "start:backend": "node ./scripts/run-alt-spotify"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/giltayar/alt-spotify.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Gil Tayar <gil@tayar.org>",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/giltayar/alt-spotify/issues"
   },
   "homepage": "https://github.com/giltayar/alt-spotify#readme",
   "devDependencies": {
+    "eslint": "^6.3.0",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^1.18.2",
     "serve": "^11.1.0"
+  },
+  "dependencies": {
+    "fastify": "^2.8.0",
+    "form-data": "^2.5.1",
+    "node-fetch": "^2.6.0"
   }
 }
