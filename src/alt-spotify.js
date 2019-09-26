@@ -1,9 +1,12 @@
 'use strict'
 const fastify = require('fastify')
 const fetch = require('node-fetch')
+const cors = require('fastify-cors')
 
 async function makeApp({clientId, clientSecret, externalBaseUrl}) {
   const app = fastify()
+
+  app.register(cors, {})
 
   let accessTokenToRefreshToken = {}
   app.get('/authorize', async (request, response) => {
