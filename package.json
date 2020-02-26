@@ -3,9 +3,13 @@
   "version": "1.0.0",
   "description": "POC for an alternative client to spotify",
   "main": "src/alt-spotify.js",
+  "engines": {
+    "node": "12.x"
+  },
   "scripts": {
+    "start": "npm run start:backend",
     "test": "prettier && eslint",
-    "start": "run-p start:*",
+    "start:all": "run-p start:*",
     "start:frontend": "serve public",
     "start:backend": "node ./scripts/run-alt-spotify"
   },
