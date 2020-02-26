@@ -1,12 +1,25 @@
 'use strict'
+const path = require('path')
 const fastify = require('fastify')
 const fetch = require('node-fetch')
 const cors = require('fastify-cors')
+const fastifyStatic = require('fastify-static')
 
 async function makeApp({clientId, clientSecret, externalBaseUrl}) {
   const app = fastify()
 
   app.register(cors, {})
+  app.register(fastifyStatic, {
+    root: path.join(__dirname, '../client/build'),
+    prefix: '/' // optional: default '/'
+  })
+
+  app.get('/receive-token', function(req, reply) {
+    reply.sendFile('index.html') // serving path.join(__dirname, 'public', 'myHtml.html') directly
+  })
+  app.get('/home', function(req, reply) {
+    reply.sendFile('index.html') // serving path.join(__dirname, 'public', 'myHtml.html') directly
+  })
 
   let accessTokenToRefreshToken = {}
   app.get('/authorize', async (request, response) => {
@@ -82,7 +95,7 @@ async function makeApp({clientId, clientSecret, externalBaseUrl}) {
   }
 
   function getAuthorizationHeader() {
-    return `Basic ${Buffer.from(`${clientId}:${clientSecret}`).toString('base64')}`;
+    return `Basic ${Buffer.from(`${clientId}:${clientSecret}`).toString('base64')}`
   }
 
   async function fetchToken(code, redirect) {
